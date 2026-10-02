@@ -4,10 +4,16 @@ const listaTarefas = document.getElementById("lista-tarefas");
 const contadorTarefas = document.getElementById("contador-tarefas");
 const botaoTema = document.getElementById("botao-tema");
 
+const botaoTodas = document.getElementById("botao-todas");
+const botaoPendentes = document.getElementById("botao-pendentes");
+const botaoConcluidas = document.getElementById("botao-concluidas");
+const botaoLimparConcluidas = document.getElementById("botao-limpar-concluidas");
+
 let tarefas = [];
 
+let filtroAtual = "todas";
 
-/* Adicionar tarefa */
+
 
 function adicionarTarefa() {
 
@@ -31,13 +37,27 @@ function adicionarTarefa() {
 }
 
 
-/* Mostrar tarefas */
-
 function mostrarTarefas() {
 
     listaTarefas.innerHTML = "";
 
-    tarefas.forEach(function(tarefa) {
+    let tarefasFiltradas = tarefas;
+
+    if (filtroAtual === "pendentes") {
+
+        tarefasFiltradas = tarefas.filter(function(tarefa) {
+            return tarefa.concluida === false;
+        });
+
+    } else if (filtroAtual === "concluidas") {
+
+        tarefasFiltradas = tarefas.filter(function(tarefa) {
+            return tarefa.concluida === true;
+        });
+
+    }
+
+    tarefasFiltradas.forEach(function(tarefa) {
 
         const item = document.createElement("li");
 
@@ -78,7 +98,6 @@ function mostrarTarefas() {
 }
 
 
-/* Concluir tarefa */
 
 function concluirTarefa(id) {
 
@@ -95,7 +114,6 @@ function concluirTarefa(id) {
 }
 
 
-/* Excluir tarefa */
 
 function excluirTarefa(id) {
 
@@ -107,7 +125,6 @@ function excluirTarefa(id) {
 }
 
 
-/* Atualizar contador */
 
 function atualizarContador() {
 
@@ -115,20 +132,18 @@ function atualizarContador() {
 
     if (quantidade === 0) {
         contadorTarefas.textContent = "0 tarefas na lista";
+
     } else if (quantidade === 1) {
         contadorTarefas.textContent = "1 tarefa na lista";
+
     } else {
         contadorTarefas.textContent = `${quantidade} tarefas na lista`;
     }
 }
 
 
-/* Botão adicionar */
-
 botaoAdicionar.addEventListener("click", adicionarTarefa);
 
-
-/* Adicionar apertando Enter */
 
 campoTarefa.addEventListener("keypress", function(event) {
 
@@ -139,7 +154,6 @@ campoTarefa.addEventListener("keypress", function(event) {
 });
 
 
-/* Modo escuro */
 
 botaoTema.addEventListener("click", function() {
 
@@ -158,5 +172,49 @@ botaoTema.addEventListener("click", function() {
         icone.classList.add("fa-moon");
 
     }
+
+});
+
+
+
+botaoTodas.addEventListener("click", function() {
+
+    filtroAtual = "todas";
+
+    mostrarTarefas();
+
+});
+
+
+
+botaoPendentes.addEventListener("click", function() {
+
+    filtroAtual = "pendentes";
+
+    mostrarTarefas();
+
+});
+
+
+
+
+botaoConcluidas.addEventListener("click", function() {
+
+    filtroAtual = "concluidas";
+
+    mostrarTarefas();
+
+});
+
+
+                    
+
+botaoLimparConcluidas.addEventListener("click", function() {
+
+    tarefas = tarefas.filter(function(tarefa) {
+        return tarefa.concluida === false;
+    });
+
+    mostrarTarefas();
 
 });
